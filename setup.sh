@@ -3,16 +3,14 @@ set -e
 
 file_name=duplicati_2.0.1.73-1_all.deb
 
-apt-get install gdebi -y
+apt-get -q install gdebi -y
 if [ ! -f ${file_name} ]; then
     wget https://updates.duplicati.com/experimental/${file_name}
 fi
 dpkg -s duplicati 2>/dev/null >/dev/null || gdebi --non-interactive ${file_name}
 
 apt-get install python3-pip -y
-pip3 install -r requirements.txt
-
-
+pip3 install --quiet -r requirements.txt
 
 export VAULT_ADDR='https://support.montagu.dide.ic.ac.uk:8200'
 if [ "$VAULT_AUTH_GITHUB_TOKEN" = "" ]; then
