@@ -1,22 +1,29 @@
 #!/usr/bin/env bash
 set -e
 
+file_name=duplicati_2.0.1.73-1_all.deb
+
 apt-get install gdebi -y
-wget https://updates.duplicati.com/experimental/duplicati_2.0.1.61-1_all.deb -O duplicati_2.0.1.61-1_all.deb
-gdebi --non-interactive duplicati_2.0.1.61-1_all.deb
+if [ ! -f ${file_name} ]; then
+    wget https://updates.duplicati.com/experimental/${file_name}
+fi
+dpkg -s duplicati 2>/dev/null >/dev/null || gdebi --non-interactive ${file_name}
 
 apt-get install python3-pip -y
 pip3 install -r requirements.txt
 
-echo -n "Please provide your GitHub personal access token for the vault: "
-read -s token
-echo ""
+
 
 export VAULT_ADDR='https://support.montagu.dide.ic.ac.uk:8200'
-export VAULT_AUTH_GITHUB_TOKEN=${token}
+if [ "$VAULT_AUTH_GITHUB_TOKEN" = "" ]; then
+    echo -n "Please provide your GitHub personal access token for the vault: "
+    read -s token
+    echo ""
+    export VAULT_AUTH_GITHUB_TOKEN=${token}
+fi
 vault auth -method=github
 
-./setup.py
+${BASH_SOURCE%/*}/setup.py
 
 echo "Setup complete. To schedule backups, run ./schedule.py"
 echo "To perform a restore, run ./restore.py"

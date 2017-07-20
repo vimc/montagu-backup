@@ -4,7 +4,7 @@ from os.path import join, isfile
 
 from subprocess import check_output
 
-from targets import DirectoryTarget, NamedVolumeTarget
+from targets import DirectoryTarget, NamedVolumeTarget, ContainerTarget
 
 root_path = "/etc/montagu/backup"
 config_path = join(root_path, "config.json")
@@ -35,6 +35,8 @@ class Settings:
             return DirectoryTarget(data["path"])
         elif t == "named_volume":
             return NamedVolumeTarget(data["name"])
+        elif t == "container":
+            return ContainerTarget(data["name"], data["path"], data["backup_script"], data["restore_script"])
         else:
             raise Exception("Unsupported target type: " + t)
 

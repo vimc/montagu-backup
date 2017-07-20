@@ -1,6 +1,6 @@
 from os import makedirs
-from os.path import isdir
-from subprocess import run, PIPE
+from os.path import isdir, dirname
+from subprocess import run, PIPE, check_output
 
 import logging
 
@@ -67,4 +67,39 @@ class NamedVolumeTarget:
         pass
 
 
+class ContainerTarget:
+    def __init__(self, name, path, backup_script, restore_script):
+        self.name = name
+        self.path = path
+        self.backup_script = backup_script
+        self.restore_script = restore_script
 
+    @property
+    def paths(self):
+        return [self.path]
+
+    @property
+    def id(self):
+        return "Container: " + self.name
+
+    def _make_empty_dir(self):
+        directory = dirname(self.path)
+        if not isdir(directory):
+            print("Creating empty directory " + directory)
+            logging.info("Creating empty directory " + directory)
+            makedirs(directory)
+
+    def before_restore(self):
+        self._make_empty_dir()
+
+    def after_restore(self):
+        print("Importing {path} into {name}".template(name=self.name, path=self.path))
+        full_target = "{container}:{path}".format(container=self.name, path="/tmp/backup")
+        check_output(["docker", "cp", self.path, full_target])
+        check_output(["docker", "exec", self.name, self.restore_script])
+
+    def before_backup(self):
+        self._make_empty_dir()
+        logging.info("Dumping data from {name} to {path}".format(name=self.name, path=self.path))
+        with open(self.path, 'w') as f:
+            run(["docker", "exec", self.name, self.backup_script], stdout=f)

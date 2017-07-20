@@ -1,0 +1,13 @@
+{
+    "s3_bucket": "{{s3_bucket}}",
+    "encrypted": true,
+    "targets": [
+        {
+            "type": "container",
+            "name": "{{db_container}}",
+            "path": "/montagu/db.dump",
+            "backup_script": "pg_dump --user=root -Fc montagu",
+            "restore_script": "/montagu-bin/restore-dump.sh /tmp/backup"
+        }
+    ]
+}
