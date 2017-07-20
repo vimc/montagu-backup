@@ -30,6 +30,7 @@ def with_logging(do):
         do()
     except Exception as e:
         logging.error("An error occurred:", exc_info=e)
+        exit(-1)
 
 
 def run_duplicati(settings, paths):
