@@ -6,8 +6,8 @@
             "type": "container",
             "name": "{{db_container}}",
             "path": "/montagu/db.dump",
-            "backup_script": "pg_dump --user=root -Fc montagu",
-            "restore_script": "/montagu-bin/restore-dump.sh /tmp/backup"
+            "backup_script": ["pg_dump", "--user=vimc", "-Fc", "montagu"],
+            "restore_script": ["/montagu-bin/restore-dump.sh", "/tmp/backup"]
         }
     ]
 }

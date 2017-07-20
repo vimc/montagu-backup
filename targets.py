@@ -93,13 +93,13 @@ class ContainerTarget:
         self._make_empty_dir()
 
     def after_restore(self):
-        print("Importing {path} into {name}".template(name=self.name, path=self.path))
+        print("Importing {path} into {name}".format(name=self.name, path=self.path))
         full_target = "{container}:{path}".format(container=self.name, path="/tmp/backup")
-        check_output(["docker", "cp", self.path, full_target])
-        check_output(["docker", "exec", self.name, self.restore_script])
+        run(["docker", "cp", self.path, full_target], check=True)
+        run(["docker", "exec", self.name] + self.restore_script, check=True)
 
     def before_backup(self):
         self._make_empty_dir()
         logging.info("Dumping data from {name} to {path}".format(name=self.name, path=self.path))
         with open(self.path, 'w') as f:
-            run(["docker", "exec", self.name, self.backup_script], stdout=f)
+            run(["docker", "exec", self.name] + self.backup_script, stdout=f, check=True)
