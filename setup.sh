@@ -3,7 +3,7 @@ set -e
 
 file_name=duplicati_2.0.1.73-1_all.deb
 
-apt-get -q install gdebi -y
+apt-get -q install gdebi crontab -y
 if [ ! -f ${file_name} ]; then
     wget https://updates.duplicati.com/experimental/${file_name}
 fi
