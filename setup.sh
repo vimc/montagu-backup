@@ -10,7 +10,7 @@ fi
 dpkg -s duplicati 2>/dev/null >/dev/null || gdebi --non-interactive ${file_name}
 
 apt-get install python3-pip -y
-pip3 install --quiet -r requirements.txt
+pip3 install --quiet -r ${BASH_SOURCE%/*}/requirements.txt
 
 export VAULT_ADDR='https://support.montagu.dide.ic.ac.uk:8200'
 if [ "$VAULT_AUTH_GITHUB_TOKEN" = "" ]; then
