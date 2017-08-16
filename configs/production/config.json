@@ -8,6 +8,10 @@
             "path": "/montagu/db.dump",
             "backup_script": ["pg_dump", "--user=vimc", "-Fc", "montagu"],
             "restore_script": ["/montagu-bin/restore-dump.sh", "/tmp/backup"]
+        },
+        {
+            "type": "named_volume",
+            "name": "{{orderly_volume}}"
         }
     ]
 }
