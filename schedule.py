@@ -32,7 +32,7 @@ def schedule_backups(test_job):
     if isfile(tab_path):
         cron = CronTab(tabfile=tab_path, user=False)
     else:
-        cron = CronTab()
+        cron = CronTab(user = False)
     clear_existing(cron, backup_script)
     add_job(cron, backup_script, test_job)
     cron.write(tab_path)
