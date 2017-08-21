@@ -41,6 +41,6 @@ def schedule_backups(test_job):
 
 if __name__ == "__main__":
     test_job = True
-    if len(sys.argv) > 0 and sys.argv[1] == "--no-immediate-backup":
+    if len(sys.argv) > 1 and sys.argv[1] == "--no-immediate-backup":
         test_job = False
     schedule_backups(test_job)
