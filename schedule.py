@@ -32,7 +32,7 @@ def schedule_backups(test_job):
     if isfile(tab_path):
         cron = CronTab(tabfile=tab_path, user=False)
     else:
-        cron = CronTab()
+        cron = CronTab(user = False)
     clear_existing(cron, backup_script)
     add_job(cron, backup_script, test_job)
     cron.write(tab_path)
@@ -41,6 +41,6 @@ def schedule_backups(test_job):
 
 if __name__ == "__main__":
     test_job = True
-    if sys.argv[1] == "--no-immediate-backup":
+    if len(sys.argv) > 1 and sys.argv[1] == "--no-immediate-backup":
         test_job = False
     schedule_backups(test_job)
