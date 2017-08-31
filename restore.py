@@ -13,7 +13,7 @@ if __name__ == "__main__":
         target.before_restore()
 
     print("Beginning restore")
-    cmd = ["duplicati-cli", "restore", settings.remote_url]
+    cmd = ["duplicati-cli", "restore", "--overwrite=true", settings.remote_url]
     cmd += sys.argv[1:]
     cmd += shared_args(settings)
     run(cmd)
