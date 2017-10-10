@@ -4,9 +4,9 @@
 ALREADY_SETUP=0
 NEEDS_SETUP=1
 
-dpkg -s duplicati   || exit NEEDS_SETUP
-dpkg -s python3-pip || exit NEEDS_SETUP
-[[ ! -f /etc/montagu/backup/config.json  ]] || exit NEEDS_SETUP
-[[ ! -f /etc/montagu/backup/secrets.json ]] || exit NEEDS_SETUP
+dpkg -s duplicati   || exit $NEEDS_SETUP
+dpkg -s python3-pip || exit $NEEDS_SETUP
+[[ -f /etc/montagu/backup/config.json  ]] || exit $NEEDS_SETUP
+[[ -f /etc/montagu/backup/secrets.json ]] || exit $NEEDS_SETUP
 
-exit ALREADY_SETUP
+exit $ALREADY_SETUP
