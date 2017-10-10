@@ -9,6 +9,10 @@
         {
             "type": "named_volume",
             "name": "registry_data"
+        },
+        {
+            "type": "directory",
+            "path": "/montagu/teamcity"
         }
     ]
 }
