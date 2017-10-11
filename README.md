@@ -19,7 +19,7 @@ Support runs on the support machine and is responsible for backing up:
 
 * Vault
 * Docker registry
-* ~~TeamCity~~ (Not implemented yet)
+* TeamCity
 
 Production runs anywhere we have a Montagu instance deployed and backups 
 enabled, but see more about Montagu backup further down.
