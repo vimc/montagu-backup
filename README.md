@@ -12,18 +12,22 @@ a new user and give them access to the "Developers" group.
 # Configuration
 We have a simple JSON file that configures our backup tool. It lives at
 `/etc/montagu/backup/config.json`. We need multiple configs because we want to
-backup different things in different environments. We have two configs 
-currently: support and production.
+backup different things in different environments. We have three configs 
+currently: support, production, and annex.
 
-Support runs on the support machine and is responsible for backing up:
+*Support* runs on the support machine and is responsible for backing up:
 
 * Vault
 * Docker registry
 * TeamCity
 
-Production runs anywhere we have a Montagu instance deployed and backups 
+*Production* runs anywhere we have a Montagu instance deployed and backups 
 enabled, but see more about Montagu backup further down.
 
+*Annex* runs on the annex machine and backups up the annex database. See 
+[Set up backup on Annex](AnnexBackupSetup.md)
+
+## Sample configuration file
 Here's a sample configuration file:
 
 ```
