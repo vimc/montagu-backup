@@ -1,0 +1,14 @@
+{
+    "s3_bucket": "montagu-live-starport",
+    "encrypted": true,
+    "targets": [
+        {
+            "type": "directory",
+            "path": "/home/montagu/starport/montagu_db_volume"
+        },
+        {
+            "type": "directory",
+            "path": "/home/montagu/starport/montagu_orderly_volume"
+        }
+    ]
+}
