@@ -19,7 +19,7 @@ if [ "$VAULT_AUTH_GITHUB_TOKEN" = "" ]; then
     echo ""
     export VAULT_AUTH_GITHUB_TOKEN=${token}
 fi
-vault auth -method=github
+vault login -method=github
 
 ${BASH_SOURCE%/*}/setup.py
 
