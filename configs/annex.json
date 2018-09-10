@@ -1,0 +1,42 @@
+{
+    "targets": [
+        {
+            "id": "main_db",
+            "type": "directory",
+            "path": "/home/montagu/starport/main_db_restore",
+            "s3_bucket": "montagu-db",
+            "encrypted": true
+        },
+        {
+            "id": "orderly",
+            "type": "directory",
+            "path": "/home/montagu/starport/orderly",
+            "s3_bucket": "montagu-orderly",
+            "encrypted": true
+        },
+        {
+            "id": "teamcity",
+            "type": "directory",
+            "path": "/home/montagu/starport/teamcity",
+            "s3_bucket": "montagu-teamcity",
+            "encrypted": true
+        },
+        {
+            "id": "vault",
+            "type": "directory",
+            "path": "/home/montagu/starport/vault",
+            "s3_bucket": "montagu-vault",
+            "encrypted": false
+        },
+        {
+            "id": "annex_db",
+            "type": "container",
+            "name": "montagu_db_annex",
+            "path": "/home/montagu/backups/annex_db.dump",
+            "backup_script": ["pg_dump", "--user=vimc", "-Fc", "--no-privileges", "montagu"],
+            "restore_script": ["/montagu-bin/restore-dump.sh", "/tmp/backup"],
+            "s3_bucket": "montagu-annex",
+            "encrypted": true
+        }
+    ]
+}
