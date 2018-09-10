@@ -5,7 +5,7 @@ from subprocess import check_output
 
 from targets import DirectoryTarget, NamedVolumeTarget, ContainerTarget
 
-root_path = "/etc/montagu/backup"
+root_path = os.path.dirname(os.path.realpath(__file__))
 config_path = join(root_path, "config.json")
 secrets_path = join(root_path, "secrets.json")
 

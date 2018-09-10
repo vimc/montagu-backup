@@ -11,7 +11,7 @@ a new user and give them access to the "Developers" group.
 
 # Configuration
 We have a simple JSON file that configures our backup tool. It lives at
-`/etc/montagu/backup/config.json`. We need multiple configs because we want to
+`config.json`. We need multiple configs because we want to
 backup different things in different environments. We have one config
 currently: annex.json. It backs up everything from the starport (see
 [BB8](https://github.com/vimc/bb8) for more on this) to individual
