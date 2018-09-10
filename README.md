@@ -90,7 +90,8 @@ Requires these fields:
 There are five entrypoints to the backup module. All need be run as root.
 
 1. `setup.sh`: This installs Duplicati and fetches secrets from the Vault. You
-   will be prompted for Vault (GitHub) access token.
+   will be prompted for Vault (GitHub) access token. Do not run as root -
+   it will use sudo to request elevation if needed.
 2. `backup.py`: Runs a one-off backup. Output is also logged to 
    `/var/log/duplicati`.
 3. `schedule.py`: Uses cron to schedule `backup.py` to be run at 2am daily.
