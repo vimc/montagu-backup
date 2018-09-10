@@ -49,6 +49,7 @@ class Settings:
 def shared_args(settings, encrypted):
     secrets = settings.secrets
     args = [
+        "--s3-server-name=s3.eu-west-2.amazonaws.com",
         "--aws_access_key_id={aws_access_key_id}".format(**secrets),
         "--aws_secret_access_key={aws_secret_access_key}".format(**secrets),
         "--use-ssl"
