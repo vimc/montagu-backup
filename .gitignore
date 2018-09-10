@@ -1,3 +1,5 @@
 *.deb
 \.idea/
 __pycache__/
+config.json
+secrets.json
