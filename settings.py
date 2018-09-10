@@ -24,6 +24,10 @@ class Settings:
 
         self.secrets = secrets
         self.targets = list(Settings.parse_target(t) for t in config["targets"])
+        ids = [t.id for t in self.targets]
+        if list(set(ids)) != ids:
+            raise Exception("Targets with duplicate IDs were found in config")
+
 
     @classmethod
     def parse_target(cls, data):
