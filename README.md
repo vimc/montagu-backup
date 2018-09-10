@@ -24,12 +24,14 @@ Here's a sample configuration file:
 {
     "targets": [
         {
+            "id": "vault",
             "type": "directory",
             "path": "/montagu/vault/storage",
             "s3_bucket": "montagu-vault",
             "encrypted": false
         },
         {
+            "id": "registry",
             "type": "named_volume",
             "name": "registry_data",
             "s3_bucket": "montagu-registry",
@@ -47,6 +49,7 @@ Targets are what should be backed up (and restored). Each target must specify a
 requires further options.
 
 ### Common options for all targets
+* `id`: A unique id for the target.
 * `s3_bucket`: Amazon S3's file storage is divided into "buckets". Permissions
   and many other options are managed at a bucket level. You can see our buckets
   by logging into the AWS console and choosing the "S3 service". We cannot have
