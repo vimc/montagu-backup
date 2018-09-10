@@ -1,0 +1,18 @@
+{
+    "targets": [
+        {
+            "id": "test1",
+            "type": "directory",
+            "path": "/home/martin/Desktop/test1",
+            "s3_bucket": "montagu-test-1",
+            "encrypted": false
+        },
+        {
+            "id": "test2",
+            "type": "directory",
+            "path": "/home/martin/Desktop/test2",
+            "s3_bucket": "montagu-test-2",
+            "encrypted": true
+        }
+    ]
+}

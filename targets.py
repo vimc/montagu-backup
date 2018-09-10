@@ -5,17 +5,25 @@ from subprocess import run, PIPE, check_output
 import logging
 
 
-class DirectoryTarget:
-    def __init__(self, path):
+class Target:
+    def __init__(self, id, bucket, encrypted):
+        self.id = id
+        self.bucket = bucket
+        self.encrypted = encrypted
+
+    @property
+    def remote_url(self):
+        return "s3://{bucket}".format(bucket=self.bucket)
+
+
+class DirectoryTarget(Target):
+    def __init__(self, path, id, bucket, encrypted):
+        super().__init__(id, bucket, encrypted)
         self.path = path
 
     @property
     def paths(self):
         return [self.path]
-
-    @property
-    def id(self):
-        return "Directory: " + self.path
 
     def before_restore(self):
         if not isdir(self.path):
@@ -29,17 +37,14 @@ class DirectoryTarget:
         pass
 
 
-class NamedVolumeTarget:
-    def __init__(self, name):
+class NamedVolumeTarget(Target):
+    def __init__(self, name, id, bucket, encrypted):
+        super().__init__(id, bucket, encrypted)
         self.name = name
 
     @property
     def paths(self):
         return [self._get_mountpoint()]
-
-    @property
-    def id(self):
-        return "Named volume: " + self.name
 
     def _get_mountpoint(self):
         return run(
@@ -67,8 +72,10 @@ class NamedVolumeTarget:
         pass
 
 
-class ContainerTarget:
-    def __init__(self, name, path, backup_script, restore_script):
+class ContainerTarget(Target):
+    def __init__(self, name, path, backup_script, restore_script, id, bucket,
+                 encrypted):
+        super().__init__(id, bucket, encrypted)
         self.name = name
         self.path = path
         self.backup_script = backup_script
@@ -77,10 +84,6 @@ class ContainerTarget:
     @property
     def paths(self):
         return [self.path]
-
-    @property
-    def id(self):
-        return "Container: " + self.name
 
     def _make_empty_dir(self):
         directory = dirname(self.path)

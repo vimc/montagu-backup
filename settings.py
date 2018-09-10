@@ -23,32 +23,38 @@ class Settings:
         else:
             secrets = {}
 
-        self.remote_url = "s3://{bucket}".format(bucket=config["s3_bucket"])
-        self.encrypted = config["encrypted"]
         self.secrets = secrets
         self.targets = list(Settings.parse_target(t) for t in config["targets"])
 
     @classmethod
     def parse_target(cls, data):
         t = data["type"]
+        id = data["id"]
+        bucket = data["s3_bucket"]
+        encrypted = data["encrypted"]
+
         if t == "directory":
-            return DirectoryTarget(data["path"])
+            return DirectoryTarget(data["path"], id, bucket, encrypted)
         elif t == "named_volume":
-            return NamedVolumeTarget(data["name"])
+            return NamedVolumeTarget(data["name"], id, bucket, encrypted)
         elif t == "container":
-            return ContainerTarget(data["name"], data["path"], data["backup_script"], data["restore_script"])
+            return ContainerTarget(data["name"],
+                                   data["path"],
+                                   data["backup_script"],
+                                   data["restore_script"],
+                                   id, bucket, encrypted)
         else:
             raise Exception("Unsupported target type: " + t)
 
 
-def shared_args(settings):
+def shared_args(settings, encrypted):
     secrets = settings.secrets
     args = [
         "--aws_access_key_id={aws_access_key_id}".format(**secrets),
         "--aws_secret_access_key={aws_secret_access_key}".format(**secrets),
         "--use-ssl"
     ]
-    if settings.encrypted:
+    if encrypted:
         args += ["--passphrase={passphrase}".format(**secrets)]
     else:
         args += ["--no-encryption=true"]

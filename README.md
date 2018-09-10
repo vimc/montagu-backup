@@ -12,36 +12,28 @@ a new user and give them access to the "Developers" group.
 # Configuration
 We have a simple JSON file that configures our backup tool. It lives at
 `/etc/montagu/backup/config.json`. We need multiple configs because we want to
-backup different things in different environments. We have three configs 
-currently: support, production, and annex.
-
-*Support* runs on the support machine and is responsible for backing up:
-
-* Vault
-* Docker registry
-* TeamCity
-
-*Production* runs anywhere we have a Montagu instance deployed and backups 
-enabled, but see more about Montagu backup further down.
-
-*Annex* runs on the annex machine and backups up the annex database. See 
-[Set up backup on Annex](AnnexBackupSetup.md)
+backup different things in different environments. We have one config
+currently: annex.json. It backs up everything from the starport (see
+[BB8](https://github.com/vimc/bb8) for more on this) to individual
+buckets on S3.
 
 ## Sample configuration file
 Here's a sample configuration file:
 
 ```
 {
-    "s3_bucket": "montagu-support",
-    "encrypted": false,
     "targets": [
         {
             "type": "directory",
-            "path": "/montagu/vault/storage"
+            "path": "/montagu/vault/storage",
+            "s3_bucket": "montagu-vault",
+            "encrypted": false
         },
         {
             "type": "named_volume",
-            "name": "registry_data"
+            "name": "registry_data",
+            "s3_bucket": "montagu-registry",
+            "encrypted": true
         }
     ]
 }
@@ -49,23 +41,24 @@ Here's a sample configuration file:
 
 Here's what the options mean:
 
-* `s3_bucket`: Amazon S3's file storage is divided into "buckets". Permissions
-  and many other options are managed at a bucket level. You can see our buckets
-  by logging into the AWS console and choosing the "S3 service". We cannot have
-  two separate environments backing up to the same bucket.
-* `encrypyted`: If `true` an encryption passphrase is pulled from the vault and
-  passed through to Duplicati and used for backup and restore. Note that without
-  encryption we still use SSL to send data to and from the cloud, so the data is
-  encrypted in transit, althought not at rest. Why turn encryption off? For the
-  support backup, the only sensitive part is the vault, which has its own 
-  backend encryption. If we further encrypted the vault backup, we'd then need
-  to decrypt the vault to get the passphrase to decrypt the vault. We do use
-  encryption for the production backup.
-
 ## Targets
 Targets are what should be backed up (and restored). Each target must specify a
 "type", which can be `directory`, `named_volume` and `container`. Each of these
 requires further options.
+
+### Common options for all targets
+* `s3_bucket`: Amazon S3's file storage is divided into "buckets". Permissions
+  and many other options are managed at a bucket level. You can see our buckets
+  by logging into the AWS console and choosing the "S3 service". We cannot have
+  two separate environments backing up to the same bucket.
+* `encrypted`: If `true` an encryption passphrase is pulled from the vault and
+  passed through to Duplicati and used for backup and restore. Note that without
+  encryption we still use SSL to send data to and from the cloud, so the data is
+  encrypted in transit, although not at rest. Why turn encryption off? For the
+  support backup, the only sensitive part is the vault, which has its own
+  backend encryption. If we further encrypted the vault backup, we'd then need
+  to decrypt the vault to get the passphrase to decrypt the vault. We do use
+  encryption for the production backup.
 
 ### Directory
 Simplest option. Requires a `path` to a directory. On a restore it will first
@@ -103,11 +96,5 @@ There are five entrypoints to the backup module. All need be run as root.
 3. `schedule.py`: Uses cron to schedule `backup.py` to be run at 2am daily.
 4. `restore.py`: Restores from remote backup.
 5. `cli.py`: Passes arguments through to Duplicati CLI, filling in secrets and
-   the remote URL. Usage example: `./cli.py list 0`, to see all files in the
-   most recent backup.
-
-# Montagu backup
-In addition to backing up infrastructure on the support machine we use this
-module to backup and restore a live Montagu instance. However, we don't do this
-directly. Instead, the `deploy.py` script in the [main Montagu repo](https://github.com/vimc/montagu)
-configures the backup and invokes the above scripts automatically.
+   the remote URL. Usage example: `./cli.py TARGET list 0`, to see all files in the
+   most recent backup (for target with id TARGET)

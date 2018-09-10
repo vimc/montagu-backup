@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-file_name=duplicati_2.0.1.73-1_all.deb
+file_name=duplicati_2.0.3.3-1_all.deb
 
 apt-get -q install gdebi cron -y
 if [ ! -f ${file_name} ]; then
-    wget https://updates.duplicati.com/experimental/${file_name}
+    wget https://updates.duplicati.com/beta/${file_name}
 fi
 dpkg -s duplicati 2>/dev/null >/dev/null || gdebi --non-interactive ${file_name}
 

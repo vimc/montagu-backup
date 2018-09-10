@@ -33,10 +33,10 @@ def with_logging(do):
         exit(-1)
 
 
-def run_duplicati(settings, paths):
-    cmd = ["duplicati-cli", "backup", settings.remote_url]
-    cmd += paths
-    cmd += shared_args(settings)
+def run_duplicati(target, settings):
+    cmd = ["duplicati-cli", "backup", target.remote_url]
+    cmd += target.paths
+    cmd += shared_args(settings, target.encrypted)
     with Popen(cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True) as p:
         for line in p.stdout:
             logging.info(line.strip())
@@ -44,23 +44,26 @@ def run_duplicati(settings, paths):
             logging.error(line.strip())
 
     if p.returncode not in [0, 1]:
-        raise Exception("Duplicati backup process returned error code {}".format(p.returncode))
+        raise Exception("Duplicati backup process for {target} returned error "
+                        "code {code}".format(target=target.id,
+                                             code=p.returncode))
 
 
 def run():
     settings = load_settings()
-    logging.info("Backing up to {}: ".format(settings.remote_url))
-    logging.info("Doing pre-backup step")
+    logging.info("Beginning backup run for these targets: ")
     for target in settings.targets:
-        logging.info("- " + target.id)
+        logging.info(" - " + target.id)
+
+    for target in settings.targets:
+        logging.info("\n" + ("*" * 79))
+        logging.info(target.id)
+        logging.info("- Doing pre-backup step")
         target.before_backup()
+        logging.info("- About to backup {paths} to {bucket}".format(
+            paths=target.paths, bucket=target.bucket))
+        run_duplicati(target, settings)
 
-    logging.info("The following paths will be backed up:")
-    paths = list(flatten(t.paths for t in settings.targets))
-    for path in paths:
-        logging.info("- " + path)
-
-    run_duplicati(settings, paths)
 
 if __name__ == "__main__":
     print("Running backup. Output will be logged to " + log_dir)

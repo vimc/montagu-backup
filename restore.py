@@ -7,18 +7,16 @@ from settings import load_settings, shared_args
 if __name__ == "__main__":
     settings = load_settings()
 
-    print("Doing pre-restore step")
     for target in settings.targets:
-        print("- " + target.id)
+        print("*" * 79)
+        print(target.id)
+        print("- Doing pre-restore step")
         target.before_restore()
+        print("- Beginning restore")
+        cmd = ["duplicati-cli", "restore", "--overwrite=true", target.remote_url]
+        cmd += sys.argv[1:]
+        cmd += shared_args(settings, target.encrypted)
+        run(cmd)
 
-    print("Beginning restore")
-    cmd = ["duplicati-cli", "restore", "--overwrite=true", settings.remote_url]
-    cmd += sys.argv[1:]
-    cmd += shared_args(settings)
-    run(cmd)
-
-    print("Doing post-restore step")
-    for target in settings.targets:
-        print("- " + target.id)
+        print("- Doing post-restore step")
         target.after_restore()
