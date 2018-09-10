@@ -7,7 +7,8 @@ apt-get -q install gdebi cron -y
 if [ ! -f ${file_name} ]; then
     wget https://updates.duplicati.com/beta/${file_name}
 fi
-dpkg -s duplicati 2>/dev/null >/dev/null || gdebi --non-interactive ${file_name}
+dpkg -s duplicati | grep -q "Status: install ok installed" \
+    || gdebi --non-interactive ${file_name}
 
 apt-get install python3-pip -y
 pip3 install --quiet -r ${BASH_SOURCE%/*}/requirements.txt
