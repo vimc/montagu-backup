@@ -31,7 +31,7 @@ class Settings:
         self.secrets = secrets
         self.targets = list(Settings.parse_target(t) for t in config["targets"])
         ids = [t.id for t in self.targets]
-        if list(set(ids)) != ids:
+        if len(set(ids)) != len(ids):
             raise Exception("Targets with duplicate IDs were found in config")
 
 
