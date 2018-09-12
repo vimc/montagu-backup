@@ -1,12 +1,11 @@
 import json
 import os
 from os.path import join, isfile
-
 from subprocess import check_output
 
 from targets import DirectoryTarget, NamedVolumeTarget, ContainerTarget
 
-root_path = "/etc/montagu/backup"
+root_path = os.path.dirname(os.path.realpath(__file__))
 config_path = join(root_path, "config.json")
 secrets_path = join(root_path, "secrets.json")
 
@@ -23,32 +22,45 @@ class Settings:
         else:
             secrets = {}
 
-        self.remote_url = "s3://{bucket}".format(bucket=config["s3_bucket"])
-        self.encrypted = config["encrypted"]
         self.secrets = secrets
         self.targets = list(Settings.parse_target(t) for t in config["targets"])
+        ids = [t.id for t in self.targets]
+        if list(set(ids)) != ids:
+            raise Exception("Targets with duplicate IDs were found in config")
+
 
     @classmethod
     def parse_target(cls, data):
         t = data["type"]
+        id = data["id"]
+        bucket = data["s3_bucket"]
+        encrypted = data["encrypted"]
+
         if t == "directory":
-            return DirectoryTarget(data["path"])
+            return DirectoryTarget(data["path"], id, bucket, encrypted)
         elif t == "named_volume":
-            return NamedVolumeTarget(data["name"])
+            return NamedVolumeTarget(data["name"], id, bucket, encrypted)
         elif t == "container":
-            return ContainerTarget(data["name"], data["path"], data["backup_script"], data["restore_script"])
+            return ContainerTarget(data["name"],
+                                   data["path"],
+                                   data["backup_script"],
+                                   data["restore_script"],
+                                   id, bucket, encrypted)
         else:
             raise Exception("Unsupported target type: " + t)
 
 
-def shared_args(settings):
+def shared_args(settings, encrypted):
     secrets = settings.secrets
     args = [
+        # See https://github.com/duplicati/duplicati/issues/2231#issuecomment-419942565
+        # for why we have this first option
+        "--s3-server-name=s3.eu-west-2.amazonaws.com",
         "--aws_access_key_id={aws_access_key_id}".format(**secrets),
         "--aws_secret_access_key={aws_secret_access_key}".format(**secrets),
         "--use-ssl"
     ]
-    if settings.encrypted:
+    if encrypted:
         args += ["--passphrase={passphrase}".format(**secrets)]
     else:
         args += ["--no-encryption=true"]

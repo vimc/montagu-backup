@@ -1,0 +1,32 @@
+{
+    "targets": [
+        {
+            "id": "main_db",
+            "type": "directory",
+            "path": "/home/montagu/starport/main_db_restore",
+            "s3_bucket": "montagu-db",
+            "encrypted": true
+        },
+        {
+            "id": "orderly",
+            "type": "directory",
+            "path": "/home/montagu/starport/orderly",
+            "s3_bucket": "montagu-orderly",
+            "encrypted": true
+        },
+        {
+            "id": "teamcity",
+            "type": "directory",
+            "path": "/home/montagu/starport/teamcity",
+            "s3_bucket": "montagu-teamcity",
+            "encrypted": true
+        },
+        {
+            "id": "vault",
+            "type": "directory",
+            "path": "/home/montagu/starport/vault",
+            "s3_bucket": "montagu-vault",
+            "encrypted": false
+        }
+    ]
+}
