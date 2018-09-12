@@ -27,16 +27,5 @@
             "path": "/home/montagu/starport/vault",
             "s3_bucket": "montagu-vault",
             "encrypted": false
-        },
-        {
-            "id": "annex_db",
-            "type": "container",
-            "name": "montagu_db_annex",
-            "path": "/home/montagu/backups/annex_db.dump",
-            "backup_script": ["pg_dump", "--user=vimc", "-Fc", "--no-privileges", "montagu"],
-            "restore_script": ["/montagu-bin/restore-dump.sh", "/tmp/backup"],
-            "s3_bucket": "montagu-annex",
-            "encrypted": true
         }
-    ]
 }
