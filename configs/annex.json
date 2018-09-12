@@ -28,4 +28,5 @@
             "s3_bucket": "montagu-vault",
             "encrypted": false
         }
+    ]
 }
