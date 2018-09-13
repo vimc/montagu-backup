@@ -11,6 +11,12 @@ secrets_path = join(root_path, "secrets.json")
 
 log_dir = '/var/log/duplicati'
 
+dblock_size = 500  # MB
+# Would need to change if the buckets were in a different region
+# See https://github.com/duplicati/duplicati/issues/2231#issuecomment-419942565
+# for why we need this
+aws_host = "s3.eu-west-2.amazonaws.com"
+
 
 class Settings:
     def __init__(self):
@@ -25,7 +31,7 @@ class Settings:
         self.secrets = secrets
         self.targets = list(Settings.parse_target(t) for t in config["targets"])
         ids = [t.id for t in self.targets]
-        if list(set(ids)) != ids:
+        if len(set(ids)) != len(ids):
             raise Exception("Targets with duplicate IDs were found in config")
 
 
@@ -53,11 +59,10 @@ class Settings:
 def shared_args(settings, encrypted):
     secrets = settings.secrets
     args = [
-        # See https://github.com/duplicati/duplicati/issues/2231#issuecomment-419942565
-        # for why we have this first option
-        "--s3-server-name=s3.eu-west-2.amazonaws.com",
+        "--s3-server-name={}".format(aws_host),
         "--aws_access_key_id={aws_access_key_id}".format(**secrets),
         "--aws_secret_access_key={aws_secret_access_key}".format(**secrets),
+        "--dblock-size={}mb".format(dblock_size),
         "--use-ssl"
     ]
     if encrypted:
