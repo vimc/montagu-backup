@@ -1,1 +1,2 @@
-python-crontab==2.2.3
+python-crontab>=2.2.3
+docopt>=0.6.2

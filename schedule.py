@@ -1,8 +1,22 @@
 #!/usr/bin/env python3
+"""
+Schedule Duplicati backups.
+
+Usage:
+  schedule.py <user> [--hour=<hour>] [--no-immediate-backup]
+
+Options:
+  --hour=<hour>          Hour (on 24-hour clock) to run at [default: 2]
+  --no-immediate-backup  Do not test the scheduled job
+
+Schedules Duplicati backup to be run daily at the specified hour, as the
+specified user.
+"""
+
 from os.path import abspath, dirname, join, isfile
 
-import sys
 from crontab import CronTab
+from docopt import docopt
 
 from settings import log_dir
 
@@ -15,32 +29,33 @@ def clear_existing(cron, backup_script):
         cron.remove(job)
 
 
-def add_job(cron, backup_script, test_job):
-    job = cron.new(command=backup_script, comment="Duplicati backup", user="root")
+def add_job(cron, backup_script, options):
+    job = cron.new(command=backup_script,
+                   comment="Duplicati backup",
+                   user=options["<user>"])
     job.day.every(1)
-    job.hour.on(2)
+    job.hour.on(int(options["--hour"]))
     job.minute.on(0)
-    if test_job:
+    if not options["--no-immediate-backup"]:
         print("Running scheduled job now as a test. Output will be logged to " + log_dir)
         job.run()
 
 
-def schedule_backups(test_job):
+def schedule_backups(options):
     here = dirname(abspath(__file__))
     print("Scheduling backup task")
     backup_script = join(here, "backup.py")
     if isfile(tab_path):
         cron = CronTab(tabfile=tab_path, user=False)
     else:
-        cron = CronTab(user = False)
+        cron = CronTab(user=False)
     clear_existing(cron, backup_script)
-    add_job(cron, backup_script, test_job)
+    add_job(cron, backup_script, options)
     cron.write(tab_path)
 
     print("Completed scheduling")
 
+
 if __name__ == "__main__":
-    test_job = True
-    if len(sys.argv) > 1 and sys.argv[1] == "--no-immediate-backup":
-        test_job = False
-    schedule_backups(test_job)
+    options = docopt(__doc__)
+    schedule_backups(options)
