@@ -5,21 +5,24 @@
             "type": "directory",
             "path": "/home/montagu/starport/main_db_restore",
             "s3_bucket": "montagu-db",
-            "encrypted": true
+            "encrypted": true,
+            "max_versions": 90
         },
         {
             "id": "orderly",
             "type": "directory",
             "path": "/home/montagu/starport/orderly",
             "s3_bucket": "montagu-orderly",
-            "encrypted": true
+            "encrypted": true,
+            "max_versions": 90
         },
         {
             "id": "teamcity",
             "type": "directory",
             "path": "/home/montagu/starport/teamcity",
             "s3_bucket": "montagu-teamcity",
-            "encrypted": true
+            "encrypted": true,
+            "max_versions": 30
         },
         {
             "id": "vault",
