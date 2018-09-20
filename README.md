@@ -35,7 +35,8 @@ Here's a sample configuration file:
             "type": "named_volume",
             "name": "registry_data",
             "s3_bucket": "montagu-registry",
-            "encrypted": true
+            "encrypted": true,
+            "max_versions": 30
         }
     ]
 }
@@ -62,6 +63,9 @@ requires further options.
   backend encryption. If we further encrypted the vault backup, we'd then need
   to decrypt the vault to get the passphrase to decrypt the vault. We do use
   encryption for the production backup.
+* `max_versions` (optional): If set to a number, then Duplicati will only store
+  this many versions on the backend. Once beyond this number of versions, 
+  Duplicati will discard the oldest backups.
 
 ### Directory
 Simplest option. Requires a `path` to a directory. On a restore it will first
@@ -102,3 +106,9 @@ There are five entrypoints to the backup module. All need be run as root.
 5. `cli.py`: Passes arguments through to Duplicati CLI, filling in secrets and
    the remote URL. Usage example: `./cli.py TARGET list 0`, to see all files in the
    most recent backup (for target with id TARGET)
+
+# Troubleshooting Duplicati
+Duplicati state is stored in ~/.config/Duplicati. In particular, this is where
+the SQLite database is stored. You can delete this if you want to completely
+wipe Duplicati's local state. However, first look at the documentation for
+Duplicati - there may be other ways to achieve what you want.

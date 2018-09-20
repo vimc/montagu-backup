@@ -37,6 +37,11 @@ def run_duplicati(target, settings):
     cmd = ["duplicati-cli", "backup", target.remote_url]
     cmd += target.paths
     cmd += shared_args(settings, target.encrypted)
+    if target.max_versions:
+        cmd += ["--keep-versions={}".format(target.max_versions)]
+        logging.info("Keeping the {} most recent remote versions".format(
+            target.max_versions))
+
     with Popen(cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True) as p:
         for line in p.stdout:
             logging.info(line.strip())

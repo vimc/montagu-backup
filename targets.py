@@ -1,15 +1,15 @@
+import logging
 from os import makedirs
 from os.path import isdir, dirname
-from subprocess import run, PIPE, check_output
-
-import logging
+from subprocess import run, PIPE
 
 
 class Target:
-    def __init__(self, id, bucket, encrypted):
+    def __init__(self, id, bucket, encrypted, max_versions):
         self.id = id
         self.bucket = bucket
         self.encrypted = encrypted
+        self.max_versions = max_versions
 
     @property
     def remote_url(self):
@@ -17,8 +17,8 @@ class Target:
 
 
 class DirectoryTarget(Target):
-    def __init__(self, path, id, bucket, encrypted):
-        super().__init__(id, bucket, encrypted)
+    def __init__(self, path, id, bucket, encrypted, max_versions):
+        super().__init__(id, bucket, encrypted, max_versions)
         self.path = path
 
     @property
@@ -38,8 +38,8 @@ class DirectoryTarget(Target):
 
 
 class NamedVolumeTarget(Target):
-    def __init__(self, name, id, bucket, encrypted):
-        super().__init__(id, bucket, encrypted)
+    def __init__(self, name, id, bucket, encrypted, max_versions):
+        super().__init__(id, bucket, encrypted, max_versions)
         self.name = name
 
     @property
@@ -74,8 +74,8 @@ class NamedVolumeTarget(Target):
 
 class ContainerTarget(Target):
     def __init__(self, name, path, backup_script, restore_script, id, bucket,
-                 encrypted):
-        super().__init__(id, bucket, encrypted)
+                 encrypted, max_versions):
+        super().__init__(id, bucket, encrypted, max_versions)
         self.name = name
         self.path = path
         self.backup_script = backup_script

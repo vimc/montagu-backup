@@ -37,23 +37,24 @@ class Settings:
 
     @classmethod
     def parse_target(cls, data):
-        t = data["type"]
+        type = data["type"]
         id = data["id"]
         bucket = data["s3_bucket"]
         encrypted = data["encrypted"]
+        max_versions = data.get("max_versions")  # Defaults to None if not present
 
-        if t == "directory":
-            return DirectoryTarget(data["path"], id, bucket, encrypted)
-        elif t == "named_volume":
-            return NamedVolumeTarget(data["name"], id, bucket, encrypted)
-        elif t == "container":
+        if type == "directory":
+            return DirectoryTarget(data["path"], id, bucket, encrypted, max_versions)
+        elif type == "named_volume":
+            return NamedVolumeTarget(data["name"], id, bucket, encrypted, max_versions)
+        elif type == "container":
             return ContainerTarget(data["name"],
                                    data["path"],
                                    data["backup_script"],
                                    data["restore_script"],
-                                   id, bucket, encrypted)
+                                   id, bucket, encrypted, max_versions)
         else:
-            raise Exception("Unsupported target type: " + t)
+            raise Exception("Unsupported target type: " + type)
 
 
 def shared_args(settings, encrypted):

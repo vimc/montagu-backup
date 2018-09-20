@@ -1,0 +1,12 @@
+{
+    "targets": [
+        {
+            "id": "test",
+            "type": "directory",
+            "path": "/tmp/test",
+            "s3_bucket": "montagu-test",
+            "encrypted": true,
+            "max_versions": 3
+        }
+    ]
+}
