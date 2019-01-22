@@ -1,14 +1,6 @@
 {
     "targets": [
         {
-            "id": "main_db",
-            "type": "directory",
-            "path": "/home/montagu/starport/main_db_restore",
-            "s3_bucket": "montagu-db",
-            "encrypted": true,
-            "max_versions": 90
-        },
-        {
             "id": "orderly",
             "type": "directory",
             "path": "/home/montagu/starport/orderly",
@@ -30,6 +22,14 @@
             "path": "/home/montagu/starport/vault",
             "s3_bucket": "montagu-vault",
             "encrypted": false
+        },
+        {
+            "id": "main_db",
+            "type": "directory",
+            "path": "/home/montagu/starport/main_db_restore",
+            "s3_bucket": "montagu-db",
+            "encrypted": true,
+            "max_versions": 90
         }
     ]
 }
