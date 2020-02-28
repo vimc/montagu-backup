@@ -10,7 +10,7 @@ Options:
   --no-immediate-backup  Do not test the scheduled job
 
 Schedules Duplicati backup to be run daily at the specified hour, as the
-specified user.
+specified user. This should probably be "montagu".
 """
 
 from os.path import abspath, dirname, join, isfile
