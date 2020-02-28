@@ -101,7 +101,7 @@ There are five entrypoints to the backup module. All need be run as root.
    it will use sudo to request elevation if needed.
 2. `backup.py`: Runs a one-off backup. Output is also logged to 
    `/var/log/duplicati`.
-3. `schedule.py`: Uses cron to schedule `backup.py` to be run at 2am daily.
+3. `schedule.py`: Uses cron to schedule `backup.py` to be run at 2am daily. Pass "montagu" as the "<user>" option.
 4. `restore.py`: Restores from remote backup.
 5. `cli.py`: Passes arguments through to Duplicati CLI, filling in secrets and
    the remote URL. Usage example: `./cli.py TARGET list 0`, to see all files in the
