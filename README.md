@@ -49,6 +49,11 @@ Targets are what should be backed up (and restored). Each target must specify a
 "type", which can be `directory`, `named_volume` and `container`. Each of these
 requires further options.
 
+## Updating targets
+If targets are updated you must first **delete the existing config.json** file in your 
+local repo, before copying the new config into place and re-running `setup.sh` - see 
+[scripts](https://github.com/vimc/montagu-backup#scripts) section for details.
+
 ### Common options for all targets
 * `id`: A unique id for the target.
 * `s3_bucket`: Amazon S3's file storage is divided into "buckets". Permissions
@@ -98,7 +103,7 @@ There are five entrypoints to the backup module. All need be run as root.
 
 1. `setup.sh`: This installs Duplicati and fetches secrets from the Vault. You
    will be prompted for Vault (GitHub) access token. Do not run as root -
-   it will use sudo to request elevation if needed.
+   it will use sudo to request elevation if needed. 
 2. `backup.py`: Runs a one-off backup. Output is also logged to 
    `/var/log/duplicati`.
 3. `schedule.py`: Uses cron to schedule `backup.py` to be run at 2am daily. Pass "montagu" as the "<user>" option.
