@@ -49,7 +49,7 @@ Targets are what should be backed up (and restored). Each target must specify a
 "type", which can be `directory`, `named_volume` and `container`. Each of these
 requires further options.
 
-## Updating targets
+### Updating targets
 If targets are updated you must first **delete the existing config.json** file in your 
 local repo, before copying the new config into place and re-running `setup.sh` - see 
 [scripts](https://github.com/vimc/montagu-backup#scripts) section for details.
