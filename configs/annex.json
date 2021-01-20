@@ -9,14 +9,6 @@
             "max_versions": 90
         },
         {
-            "id": "teamcity",
-            "type": "directory",
-            "path": "/home/montagu/starport/teamcity",
-            "s3_bucket": "montagu-teamcity",
-            "encrypted": true,
-            "max_versions": 30
-        },
-        {
             "id": "vault",
             "type": "directory",
             "path": "/home/montagu/starport/vault",
